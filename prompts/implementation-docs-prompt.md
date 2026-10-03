@@ -1,487 +1,983 @@
 # Implementation Documentation Task
 
-Based on the implementation you have completed, generate a complete **implementation documentation** for the backend.
+Based on the backend implementation that has been completed, generate a complete, polished, developer-friendly **implementation documentation suite**.
+
+The documentation must be based entirely on the **actual implementation/codebase**.
+
+The final documentation should be:
+
+- Accurate enough for backend engineers.
+- Easy to scan for frontend/mobile engineers.
+- Visually polished in GitHub-flavoured Markdown.
+- Consistent across all modules.
+- Complete enough that another developer can integrate with the backend without reading the source code for normal API usage.
+- Structured like professional API documentation rather than raw engineering notes.
+
+---
+
+# 1. Primary Objective
+
+Generate implementation documentation for every implemented backend module.
 
 The documentation must be split **module by module**, with one Markdown file per module.
 
-## Output Structure
-
-Create the documentation using this structure:
+Example:
 
 ```text
 implementation-docs/
+├── README.md
 ├── 1-auth.md
 ├── 2-users.md
-├── 3-<module-name>.md
-├── 4-<module-name>.md
+├── 3-properties.md
+├── 4-bookings.md
+├── 5-payments.md
 └── ...
 ```
 
-Use the actual modules implemented in the project. Do not group unrelated modules together.
+Use the actual modules implemented in the project.
+
+Do not:
+
+- Group unrelated modules together.
+- Invent modules.
+- Skip implemented modules.
+- Combine endpoints simply to reduce documentation size.
 
 Each module must have its own `.md` file.
 
----
+Also generate:
 
-# Markdown and JSON Formatting Requirements
-
-All generated Markdown must render correctly in standard CommonMark/GitHub-flavoured Markdown viewers.
-
-For every request or response payload:
-
-- Use a fenced code block labelled `json`.
-- Include only valid JSON in that block.
-- Pretty-print JSON with **two-space indentation**.
-- Put each object property and array item on its own appropriate line; never emit minified or single-line JSON.
-- Preserve the actual response shape and values. Formatting must not add, remove, or rename fields.
-
-When an example Markdown block contains a nested JSON fence, use four backticks for the outer `md` fence and three backticks for the nested JSON fence. Close each fence with the same number of backticks used to open it.
-
----
-
-# Important Requirement
-
-**DO NOT SKIP ANY IMPLEMENTED ROUTE, FIELD, VALIDATION, RESPONSE, LOGIC, EXAMPLE, OR IMPORTANT CLIENT INFORMATION.**
-
-The documentation must be generated from the **actual implementation/code**, not assumptions.
-
-If something is not implemented, do not invent it.
-
-If a route has different behaviours depending on the input, role, status, permissions, or other conditions, document those variations.
-
----
-
-# Required Structure for EVERY Route
-
-Every route documented inside a module must contain sections 1–10 below. Section 11 is conditional: include it only when there is additional important information to report.
-
-## 1. Title
-
-Write the `Title` label and its value on the same heading line.
-
-```md
-## Title: <Clear route title>
+```text
+implementation-docs/README.md
 ```
 
-Example:
-
-```md
-## Title: Create User
-```
+The README acts as the entry point and navigation page for the complete documentation.
 
 ---
 
-## 2. Route
+# 2. Documentation Design Principles
 
-Write the `Route` label, HTTP method, and complete API path on the same heading line.
+The documentation must prioritize both:
 
-Always include the HTTP method and complete API route.
+1. **Implementation accuracy**
+2. **Excellent readability**
 
-```md
-## Route: POST api/v2/users
-```
+Do not produce visually flat documentation where every piece of information has the same hierarchy.
 
-Use the actual API prefix and route from the implementation.
+Use:
 
----
+- Strong heading hierarchy.
+- Endpoint numbering.
+- Summary tables.
+- Short explanatory text.
+- Clear field tables.
+- Proper spacing.
+- Consistent formatting.
+- Meaningful callouts.
+- Complete JSON examples.
+- Clear separation between endpoints.
 
-## 3. Authorization
+Avoid:
 
-Every route must document authorization immediately after `## Route`, including public routes. Use this exact table structure:
+- Huge unbroken paragraphs.
+- Excessive prose.
+- Repeating the route in several different headings.
+- Generic explanations.
+- Decorative content that adds no technical value.
+- Excessive nesting.
+- HTML-heavy layouts.
+- Emojis as structural elements.
+- Fake badges or images.
+- One-line/minified JSON.
 
-```md
-## Authorization
-
-| Authorization           | Roles           | Permissions        |
-| ----------------------- | --------------- | ------------------ |
-| `Bearer <access-token>` | `HOST`, `ADMIN` | `properties:write` |
-```
-
-Rules:
-
-- For public routes, write `No auth` under `Authorization` and `None` under both `Roles` and `Permissions`.
-- For routes protected by optional authentication, write `Optional Bearer <access-token>` under `Authorization`. State `None` for roles and permissions unless the implementation applies them when a token is supplied.
-- For authenticated routes, state the exact client credential/header required by the implementation, for example `Bearer <access-token>`.
-- List every required role under `Roles`; write `None` only when any authenticated user is permitted.
-- List every required permission under `Permissions`; write `None` when the implementation checks no explicit permission.
-- Do not infer roles, permissions, or authentication schemes from similar routes.
-
----
-
-## 4. Query Parameters
-
-If the route has query parameters, document **every query parameter in a Markdown table**. Do not describe query parameters in prose or a list.
-
-Use exactly these columns, in this order: `Name`, `Is Optional`, `Default Value`, and `Values`.
-
-```md
-## Query
-
-| Name   | Is Optional | Default Value | Values                                      |
-| ------ | ----------- | ------------- | ------------------------------------------- |
-| page   | Yes         | `1`           | Positive integer                            |
-| limit  | Yes         | `20`          | Integer `1`–`100`                           |
-| search | Yes         | None          | String; use `john` to search by name/email  |
-| role   | Yes         | None          | `USER`, `HOST`, `ADMIN` (only if supported) |
-```
-
-Rules:
-
-- Include every supported query parameter as one table row.
-- State `Yes` or `No` under `Is Optional`.
-- State the actual default under `Default Value`, or `None` when the implementation has no default.
-- State the parameter type, validation constraints, accepted values, and a useful example under `Values`.
-- For enum, role, status, sort, or other restricted parameters, list every allowed value under `Values`; never use a generic description such as “valid role”.
-- Do not invent roles or allowed values. List roles only when the implementation accepts a role query parameter.
-- If the route has no query parameters, explicitly write:
-
-```md
-## Query
-
-None.
-```
-
-Do not omit the section.
+The Markdown must remain clean and readable in standard GitHub-flavoured Markdown viewers.
 
 ---
 
-# 5. Request Body
+# 3. Global Documentation README
 
-If the route accepts a request body, document the body.
+Create:
 
-````md
-## Body
+```text
+implementation-docs/README.md
+```
+
+Use this layout:
+
+```md
+# Backend Implementation Documentation
+
+## Overview
+
+<Short description of the backend and what this documentation covers.>
+
+## API Conventions
+
+| Item | Value |
+| --- | --- |
+| Base API prefix | `/api/v2` |
+| Authentication | `Bearer <access-token>` |
+| Request format | `application/json` |
+| Response format | `application/json` |
+| ID format | <actual implementation> |
+| Date format | <actual implementation> |
+
+Only include conventions verified from the implementation.
+
+## Modules
+
+| # | Module | Description | Endpoints |
+| --- | --- | --- | ---: |
+| 1 | [Authentication](./1-auth.md) | Account authentication and session management | 10 |
+| 2 | [Users](./2-users.md) | User management | 8 |
+| ... | ... | ... | ... |
+
+## Global Response Format
+
+<Document the global success envelope if one exists.>
 
 ```json
 {
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john@example.com",
-  "role": "admin"
-}
-```
-````
-
-The example must represent a **realistic valid payload based on the actual DTO/schema/validation rules**.
-
-Document:
-
-- Required fields
-- Optional fields
-- Field types
-- Allowed values/enums
-- Validation rules
-- Nested objects
-- Arrays
-- IDs
-- Dates
-- Files, if applicable
-
-If there is no request body:
-
-```md
-## Body
-
-None.
-```
-
----
-
-# 6. Response
-
-Document the successful response using the actual response structure implemented by the backend.
-
-For every successful response with a JSON body, the `### Response` subsection **must contain a complete, fenced `json` example**. A prose statement such as “the result is returned in `data`” is not a response example and is not allowed.
-
-````md
-## Response
-
-### Status Code
-
-201 Created
-
-### Response
-
-```json
-{
-  "statusCode": 201,
-  "data": {
-    "user": {
-      "id": "66b0c3c2a9561a1e02d0c123",
-      "fullName": "Ada Okafor",
-      "email": "ada@example.com",
-      "phoneNumber": null,
-      "profilePicture": null,
-      "isEmailVerified": false,
-      "roles": []
-    },
-    "verification": {
-      "channel": "EMAIL",
-      "expiresInSeconds": 600
-    }
-  },
-  "message": "Request successful",
-  "timestamp": "2026-10-01T12:00:00.000Z"
-}
-```
-````
-
-Do not invent response fields.
-
-Use the actual response returned by the implementation.
-
-The example must show the complete API envelope when the global response interceptor applies: `statusCode`, `data`, `message`, and `timestamp`. Include a realistic value for every field returned by the selected execution branch. Do not use `{}`, `...`, `<response data>`, or a partial `data` object as a substitute for the response body. The only exceptions are responses with no body (such as `204 No Content`) and non-JSON redirects/downloads; explicitly state the actual non-JSON behaviour for those exceptions.
-
-Every documented response variant must follow the same rule. For each non-empty JSON error response—including `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict`, and `429 Too Many Requests` when implemented—include its status code and a complete, fenced `json` response body. Do not replace an error response body with prose such as “validation errors are returned.” Only state `Empty response body.` when the implementation actually returns no body.
-
-For the global HTTP exception filter, error examples use the implemented shape below; replace the message with the actual route-specific error message:
-
-```json
-{
-  "statusCode": 404,
-  "message": "Property not found",
-  "timestamp": "2026-10-01T12:00:00.000Z"
-}
-```
-
-## Mandatory Response Verification
-
-Before finalizing any module, verify every `### Response` and every documented response-variant code block against the controller, service, response interceptor, and exception filter.
-
-- Verify the HTTP status code against the controller/decorator and actual thrown exception.
-- Parse every fenced `json` example as JSON.
-- Verify every success example has the exact interceptor envelope and a non-empty, implementation-faithful `data` example when the response has a body.
-- Verify every documented 4xx/5xx JSON response has its actual `statusCode`, `message`, and `timestamp` body.
-- Verify that no `### Response` or response variant contains prose in place of a required JSON body.
-- Verify that `204` and other non-JSON responses are the only documented exceptions.
-
-Do not finish or report the documentation as complete until this verification passes.
-
----
-
-# 7. Response Variants / Examples
-
-For routes where the response can vary depending on input, state, permissions, resource existence, etc., document the different variants.
-
-For example:
-
-### Example 1 — Successful Request
-
-```json
-{
-  "statusCode": 201,
-  "data": {
-    "user": {
-      "id": "66b0c3c2a9561a1e02d0c123",
-      "fullName": "Ada Okafor",
-      "email": "ada@example.com",
-      "phoneNumber": null,
-      "profilePicture": null,
-      "isEmailVerified": false,
-      "roles": []
-    },
-    "verification": {
-      "channel": "EMAIL",
-      "expiresInSeconds": 600
-    }
-  },
+  "statusCode": 200,
+  "data": {},
   "message": "Request successful",
   "timestamp": "2026-10-01T12:00:00.000Z"
 }
 ```
 
-### Example 2 — Resource Not Found
+## Global Error Format
 
-```json
-{
-  "statusCode": 404,
-  "message": "User not found",
-  "timestamp": "2026-10-01T12:00:00.000Z"
-}
-```
-
-### Example 3 — Validation Error
+<Document the global error envelope if one exists.>
 
 ```json
 {
   "statusCode": 400,
-  "message": "email must be an email",
+  "message": "Example error",
   "timestamp": "2026-10-01T12:00:00.000Z"
 }
 ```
 
-Include the correct HTTP status code for each response.
+## Authentication
 
-Do this whenever the implementation has meaningful response variations.
+<Brief explanation based on the actual guards/authentication implementation.>
+
+## Documentation Index
+
+- [Authentication](./1-auth.md)
+- [Users](./2-users.md)
+- ...
+```
+
+Do not invent global conventions.
+
+If a convention varies between modules or routes, say so.
 
 ---
 
-# 8. Additional Request Examples
+# 4. Module Document Layout
 
-If a route supports different valid payloads or important use cases, provide additional examples.
-
-For example:
-
-### Example 1 — Admin User
-
-```json
-{
-  "role": "admin",
-  "email": "admin@example.com"
-}
-```
-
-### Example 2 — Regular User
-
-```json
-{
-  "role": "user",
-  "email": "user@example.com"
-}
-```
-
-Only include examples supported by the actual implementation.
-
-Do not create hypothetical payloads.
-
----
-
-# 9. Client Note
-
-Every route must have a client implementation guide.
+Every module must use the following top-level structure.
 
 ```md
-## Client Note
+# Authentication
 
-- The client must send the authentication token in the Authorization header.
-- The client should send the request as `application/json`.
-- The `role` field accepts only the documented role values.
-- The client should handle `404` when the requested resource does not exist.
-- After a successful request, the client can use the returned `data.id`.
+> Authentication, account verification, password recovery, session management, and OAuth functionality.
+
+## Overview
+
+<Concise explanation of the module's responsibility.>
+
+## Endpoint Index
+
+| # | Method | Endpoint | Purpose | Auth |
+| ---: | --- | --- | --- | --- |
+| 1 | `POST` | `/api/v2/auth/signup` | Create an account | Public |
+| 2 | `POST` | `/api/v2/auth/signin` | Sign in | Public |
+| 3 | `POST` | `/api/v2/auth/logout` | Revoke a session | Bearer |
+| ... | ... | ... | ... | ... |
+
+## Module Notes
+
+Only include this section when there are important behaviours that apply to several endpoints.
+
+Examples:
+
+- Global throttling behaviour.
+- Shared authentication guards.
+- Shared DTO conventions.
+- Shared serialization behaviour.
+- Shared tenant restrictions.
+- Shared response interceptors.
+
+Do not repeat information here if it applies to only one endpoint.
+
+---
+
+# Endpoints
+
+## 1. Sign up
+
+`POST /api/v2/auth/signup`
+
+> Create a new user account and begin email verification.
+
+...
+
+---
+
+## 2. Sign in
+
+`POST /api/v2/auth/signin`
+
+> Authenticate a user and issue an access/refresh-token pair.
+
+...
 ```
 
-Explain what the frontend/mobile/client developer needs to know to correctly consume the endpoint.
+Use a horizontal rule:
 
-Include things such as:
+```md
+---
+```
 
-- Authentication requirements
-- Required headers
+between routes.
+
+This visual separation is mandatory.
+
+---
+
+# 5. Endpoint Heading Design
+
+Do NOT use this pattern:
+
+```md
+## Title: Sign up
+
+## Route: POST /api/v2/auth/signup
+```
+
+Instead, each endpoint must begin like this:
+
+```md
+## 1. Sign up
+
+`POST /api/v2/auth/signup`
+
+> Create a new account and begin email verification.
+```
+
+Rules:
+
+- Number endpoints according to their order in the module's Endpoint Index.
+- Use a clear human-readable endpoint name.
+- Put the method and complete route immediately beneath the title.
+- Add a one-sentence description beneath the route.
+- Use the actual API prefix.
+- Do not add descriptions that are not supported by implementation behaviour.
+
+---
+
+# 6. Endpoint Overview
+
+Immediately after the route introduction, include:
+
+```md
+### Endpoint Overview
+
+| Property | Value |
+| --- | --- |
+| Authentication | No auth |
+| Roles | None |
+| Permissions | None |
+| Content-Type | `application/json` |
+| Success Status | `201 Created` |
+| Rate Limit | 5 requests / 60 seconds |
+```
+
+Only include rows relevant to the route.
+
+Supported rows include:
+
+- Authentication
+- Roles
+- Permissions
 - Content-Type
-- Pagination behaviour
-- Sorting
-- Filtering
-- File uploads
-- Enum values
-- Date formats
-- ID formats
-- Token requirements
-- Permission requirements
-- Special client-side handling
-- Expected UI behaviour when appropriate
-- How to handle important response states
+- Success Status
+- Rate Limit
+- Response Type
+- Upload Type
+- Cache Behaviour
+- Idempotency
+- Other important request-level metadata
 
-Do not document backend internals here unless they directly affect the client.
+Rules:
+
+- `Authentication` must always appear.
+- `Roles` must always appear.
+- `Permissions` must always appear.
+- `Success Status` must always appear.
+- Do not invent metadata.
+- Omit optional rows that do not apply.
+
+Authentication values should be implementation-faithful, for example:
+
+```text
+No auth
+Bearer <access-token>
+Optional Bearer <access-token>
+API key
+```
+
+For public routes:
+
+```text
+Authentication: No auth
+Roles: None
+Permissions: None
+```
+
+For authenticated routes without role restrictions:
+
+```text
+Authentication: Bearer <access-token>
+Roles: None
+Permissions: None
+```
+
+List every actual role and permission where restrictions exist.
 
 ---
 
-# 10. Backend Logic
+# 7. Request
 
-Every route must contain a backend implementation/logic section.
+Every endpoint must contain:
 
 ```md
-## Logic
-
-1. Authenticate the request.
-2. Validate the request payload.
-3. Check whether the authenticated user has permission.
-4. Check whether the requested resource exists.
-5. Perform the required database operation.
-6. Return the appropriate response.
+### Request
 ```
 
-This section must explain what the backend actually does.
+Under Request, use the appropriate subsections.
+
+Recommended order:
+
+```md
+#### Query Parameters
+#### Path Parameters
+#### Headers
+#### Body
+#### Body Fields
+#### Files
+```
+
+Only `Query Parameters` and `Body` are mandatory sections.
+
+Other sections should be included when applicable.
+
+---
+
+# 8. Query Parameters
+
+Every endpoint must contain:
+
+```md
+#### Query Parameters
+```
+
+If there are no query parameters:
+
+```md
+#### Query Parameters
+
+None.
+```
+
+If query parameters exist, use exactly:
+
+```md
+#### Query Parameters
+
+| Name | Type | Required | Default | Accepted Values / Validation | Example |
+| --- | --- | --- | --- | --- | --- |
+| `page` | integer | No | `1` | Positive integer | `2` |
+| `limit` | integer | No | `20` | `1`–`100` | `50` |
+| `search` | string | No | None | Free-text search | `john` |
+| `status` | string | No | None | `ACTIVE`, `INACTIVE` | `ACTIVE` |
+```
+
+Rules:
+
+- Document every supported parameter.
+- State the actual type.
+- Use `Yes` or `No` for Required.
+- Show actual defaults.
+- List every enum/restricted value.
+- Include actual validation constraints.
+- Do not say only “valid status”.
+- Do not invent allowed values.
+
+---
+
+# 9. Path Parameters
+
+When a route contains path parameters, include:
+
+```md
+#### Path Parameters
+
+| Name | Type | Required | Validation | Example |
+| --- | --- | --- | --- | --- |
+| `id` | string | Yes | Valid MongoDB ObjectId | `66b0c3c2a9561a1e02d0c123` |
+```
+
+Only document validation that actually exists or is enforced by implementation behaviour.
+
+If there are no path parameters, omit this subsection.
+
+---
+
+# 10. Headers
+
+Include a Headers subsection only when headers require explanation beyond what is already obvious from Endpoint Overview.
+
+Example:
+
+```md
+#### Headers
+
+| Header | Required | Value |
+| --- | --- | --- |
+| `Authorization` | Yes | `Bearer <access-token>` |
+| `Content-Type` | Yes | `application/json` |
+```
+
+For file uploads:
+
+```md
+| `Content-Type` | Yes | `multipart/form-data` |
+```
+
+Do not invent headers.
+
+---
+
+# 11. Request Body
+
+Every endpoint must contain:
+
+```md
+#### Body
+```
+
+If the endpoint has no request body:
+
+```md
+#### Body
+
+None.
+```
+
+If it accepts JSON, include a complete realistic payload:
+
+```json
+{
+  "fullName": "Ada Okafor",
+  "email": "ada@example.com",
+  "password": "SecurePass8",
+  "recaptchaToken": "client-recaptcha-token"
+}
+```
+
+The example must:
+
+- Be valid according to the actual DTO/schema.
+- Use realistic values.
+- Include every required field.
+- Include useful optional fields where appropriate.
+- Never include fields rejected/stripped by the implementation unless the purpose is specifically to document that behaviour.
+
+---
+
+# 12. Body Field Documentation
+
+For every non-trivial request body, immediately follow the JSON example with:
+
+```md
+#### Body Fields
+
+| Field | Type | Required | Validation / Accepted Values | Notes |
+| --- | --- | --- | --- | --- |
+| `fullName` | string | Yes | <actual validation> | User's display name |
+| `email` | string | Yes | Valid email address | Normalized to lowercase |
+| `password` | string | Yes | 8–255 characters | Never returned by the API |
+| `recaptchaToken` | string | Yes | Non-empty string | Verified server-side |
+| `referralCode` | string | No | <actual validation> | <implementation behaviour> |
+```
+
+Rules:
+
+- Include every accepted body field.
+- State nested fields.
+- State arrays.
+- State enum values.
+- State nullable fields.
+- State required/optional status.
+- State actual validation.
+- Document normalization such as trimming/lower-casing when confirmed.
+- Mention ignored/accepted-but-unused fields when this matters.
+- Do not invent descriptions from field names alone.
+
+For nested objects, use dot notation where useful:
+
+```text
+address.street
+address.city
+items[].productId
+```
+
+---
+
+# 13. File Uploads
+
+For multipart/file routes, document files separately.
+
+Example:
+
+```md
+#### Files
+
+| Field | Required | Type | Accepted Formats | Limits |
+| --- | --- | --- | --- | --- |
+| `profilePicture` | Yes | File | `image/jpeg`, `image/png` | Maximum 5 MB |
+```
+
+Document only actual limits and file types.
+
+---
+
+# 14. Success Response
+
+Every endpoint must contain:
+
+```md
+### Success Response
+```
+
+Then:
+
+```md
+**Status:** `201 Created`
+```
+
+Follow it immediately with a complete response example.
+
+Example:
+
+```json
+{
+  "statusCode": 201,
+  "data": {
+    "user": {
+      "id": "66b0c3c2a9561a1e02d0c123",
+      "fullName": "Ada Okafor",
+      "email": "ada@example.com",
+      "phoneNumber": null,
+      "profilePicture": null,
+      "isEmailVerified": false,
+      "roles": []
+    },
+    "verification": {
+      "channel": "EMAIL",
+      "expiresInSeconds": 600
+    }
+  },
+  "message": "Request successful",
+  "timestamp": "2026-10-01T12:00:00.000Z"
+}
+```
+
+Rules:
+
+- Show the full response.
+- Include the global envelope when the interceptor applies.
+- Include realistic values.
+- Include all returned fields for the selected branch.
+- Preserve nested object shapes.
+- Preserve arrays.
+- Preserve nullability.
+- Do not use placeholders such as:
+
+```text
+...
+{}
+<data>
+<response>
+```
+
+unless the implementation literally returns such a value.
+
+For `204 No Content`:
+
+```md
+### Success Response
+
+**Status:** `204 No Content`
+
+Empty response body.
+```
+
+For redirects:
+
+```md
+### Success Response
+
+**Status:** `302 Found`
+
+The request is redirected to <actual destination/flow>.
+No JSON response body is returned.
+```
+
+Do not fabricate a JSON envelope for redirects, downloads, streams, or empty responses.
+
+---
+
+# 15. Response Variants
+
+Every endpoint must contain:
+
+```md
+### Response Variants
+```
+
+If no meaningful implementation-specific variants exist:
+
+```md
+### Response Variants
+
+None.
+```
+
+Otherwise first provide a compact overview:
+
+```md
+### Response Variants
+
+| Status | Condition |
+| --- | --- |
+| `400 Bad Request` | Validation or invalid OTP |
+| `401 Unauthorized` | Invalid authentication credentials |
+| `409 Conflict` | Account already exists |
+| `429 Too Many Requests` | Rate limit exceeded |
+```
+
+Then document each important variant.
+
+Example:
+
+```md
+#### `400 Bad Request` — Invalid OTP
+
+```json
+{
+  "statusCode": 400,
+  "message": "Invalid or expired OTP.",
+  "timestamp": "2026-10-01T12:00:00.000Z"
+}
+```
+
+#### `401 Unauthorized` — Invalid credentials
+
+```json
+{
+  "statusCode": 401,
+  "message": "Invalid credentials.",
+  "timestamp": "2026-10-01T12:00:00.000Z"
+}
+```
+```
+
+Rules:
+
+- Include actual status codes.
+- Include actual messages where determinable.
+- Do not collapse multiple materially different behaviours into a vague generic error.
+- Do not invent error branches.
+- When the exact error is delegated to an external/internal service and cannot be statically determined, explain that accurately rather than inventing a message.
+- Every JSON error example must contain the actual global error shape.
+
+---
+
+# 16. Additional Request Examples
+
+Every endpoint must contain:
+
+```md
+### Additional Request Examples
+```
+
+If none are useful:
+
+```md
+### Additional Request Examples
+
+None.
+```
+
+Add examples only when the implementation supports meaningfully different valid request patterns.
+
+Examples include:
+
+- Different supported enum modes.
+- Optional fields.
+- Different authentication paths.
+- Different resource types.
+- Different filter combinations.
+- Different payment methods.
+- Different role-specific input.
+
+Do not add examples merely to fill space.
+
+Example:
+
+```md
+#### Minimal Payload
+
+```json
+{
+  "email": "user@example.com",
+  "password": "SecurePass8"
+}
+```
+
+#### Payload with Optional Referral Code
+
+```json
+{
+  "email": "user@example.com",
+  "password": "SecurePass8",
+  "referralCode": "ADA123"
+}
+```
+```
+
+Only include combinations supported by implementation.
+
+---
+
+# 17. Client Integration Notes
+
+Every route must contain:
+
+```md
+### Client Integration
+```
+
+Make this section practical and frontend-oriented.
+
+Prefer concise bullets.
+
+Example:
+
+```md
+### Client Integration
+
+- Send the payload as `application/json`.
+- No bearer token is required.
+- After successful signup, transition the user to the email-verification flow.
+- Treat the returned user `id` as an opaque identifier.
+- The verification code expires after 600 seconds.
+- Handle `429` by disabling immediate retry and displaying an appropriate retry message.
+```
+
+Explain only what affects clients.
+
+Possible topics:
+
+- Authentication requirements.
+- Required headers.
+- Token storage/use.
+- Content type.
+- Pagination.
+- Sorting.
+- Filtering.
+- File uploads.
+- Enum values.
+- Date formats.
+- ID handling.
+- Redirect handling.
+- Permission-specific UI states.
+- Retry behaviour.
+- Important status codes.
+- Follow-up screens/actions.
+- Polling.
+- Disabled states.
+- Upload progress.
+- Session invalidation.
+
+Do not dump backend implementation internals into this section.
+
+---
+
+# 18. Backend Behaviour
+
+Every route must contain:
+
+```md
+### Backend Behaviour
+```
+
+Use a numbered flow.
+
+Example:
+
+```md
+### Backend Behaviour
+
+1. Applies the route's public rate limiter.
+2. Validates and transforms the DTO.
+3. Verifies the supplied reCAPTCHA token using the client IP.
+4. Checks whether an account with the supplied email already exists.
+5. Creates the user.
+6. Generates the email-verification OTP.
+7. Sends the verification message.
+8. Reloads the safe account projection.
+9. Returns the response through the global response interceptor.
+```
+
+Requirements:
+
+- Follow the actual execution order where relevant.
+- Mention conditions/branches.
+- Mention guards.
+- Mention middleware.
+- Mention validation.
+- Mention permission checks.
+- Mention tenant checks.
+- Mention resource lookups.
+- Mention duplicate detection.
+- Mention database operations.
+- Mention transactions.
+- Mention external services.
+- Mention file operations.
+- Mention notifications.
+- Mention events.
+- Mention session creation/revocation.
+- Mention side effects.
+- Mention important error conditions.
+
+Do not reduce every endpoint to generic text such as:
+
+```text
+1. Validate request.
+2. Call service.
+3. Return response.
+```
+
+The section must explain the actual implementation.
+
+---
+
+# 19. Important Behaviour
 
 Include:
 
-- Authentication checks
-- Authorization checks
-- Role/permission checks
-- Validation
-- Database queries
-- Existence checks
-- Duplicate checks
-- Business rules
-- Status checks
-- Relationship checks
-- Tenant/organization checks
-- Transactions
-- External API calls
-- Side effects
-- Notifications
-- Events
-- File operations
-- Error handling
-- Any other important backend behaviour
-
-Document the **actual order and conditions of the logic** where relevant.
-
----
-
-# 11. Important Information
-
-Include this section only when the route has important client-facing information that does not fit into the sections above.
-
 ```md
-## Important Information
-
-- This endpoint requires authentication.
-- The resource belongs to the authenticated user's organization.
-- Updating this resource may trigger a notification.
-- The operation cannot be performed when the resource is archived.
+### Important Behaviour
 ```
 
-If there is nothing additional, omit the `## Important Information` section entirely. Do not write `None.` for this section.
+only when there is unusual or important information not already obvious elsewhere.
+
+Do NOT include this section simply because the template contains it.
+
+Good examples:
+
+```md
+### Important Behaviour
+
+> The submitted `referralCode` is accepted by the DTO but is not currently forwarded to the signup service.
+```
+
+or:
+
+```md
+### Important Behaviour
+
+> Password reset revokes all active refresh sessions for the account.
+```
+
+or:
+
+```md
+### Important Behaviour
+
+> The endpoint intentionally returns the same success response whether or not the email exists, preventing account enumeration.
+```
+
+Use this section for:
+
+- Security-sensitive behaviour.
+- Unexpected implementation behaviour.
+- Accepted-but-unused values.
+- Irreversible actions.
+- Cross-resource side effects.
+- Compatibility concerns.
+- Important current implementation limitations.
+
+Do not use it for generic reminders.
 
 ---
 
-# Required Route Documentation Template
+# 20. Complete Endpoint Template
 
-Every route must follow this complete structure:
+Use this pattern for every route:
 
 ````md
-# <Module Name>
+## <number>. <Endpoint Name>
 
-## Title: <Create route title>
+`<METHOD> /api/v2/<route>`
 
-## Route: <METHOD> api/v2/<route>
+> <One-sentence purpose.>
 
-## Authorization
+### Endpoint Overview
 
-| Authorization                                                             | Roles                  | Permissions                  |
-| ------------------------------------------------------------------------- | ---------------------- | ---------------------------- |
-| <`Bearer <access-token>`, `Optional Bearer <access-token>`, or `No auth`> | <Exact roles, or None> | <Exact permissions, or None> |
+| Property | Value |
+| --- | --- |
+| Authentication | <actual value> |
+| Roles | <actual roles or None> |
+| Permissions | <actual permissions or None> |
+| Success Status | `<status>` |
+| Content-Type | `<type>` |
 
-## Query
+### Request
 
-| Name | Is Optional | Default Value | Values |
-| ---- | ----------- | ------------- | ------ |
-| ...  | ...         | ...           | ...    |
+#### Query Parameters
 
-## Body
+<Actual table or None.>
+
+#### Path Parameters
+
+<Only when applicable.>
+
+#### Headers
+
+<Only when useful/applicable.>
+
+#### Body
 
 ```json
 {
-  "exampleField": "example value"
+  "example": "value"
 }
 ```
 
-## Response
+#### Body Fields
 
-### Status Code
+| Field | Type | Required | Validation / Accepted Values | Notes |
+| --- | --- | --- | --- | --- |
+| `example` | string | Yes | <actual validation> | <actual behaviour> |
 
-<HTTP status code> <status text>
+### Success Response
 
-### Response
+**Status:** `200 OK`
 
 ```json
 {
@@ -496,194 +992,662 @@ Every route must follow this complete structure:
 
 ### Response Variants
 
-#### Example 1 — <Description>
+| Status | Condition |
+| --- | --- |
+| `400 Bad Request` | <actual condition> |
+| `404 Not Found` | <actual condition> |
 
-**Status Code:** <HTTP status>
+#### `400 Bad Request` — <Description>
 
 ```json
 {
   "statusCode": 400,
-  "message": "<actual validation error message>",
+  "message": "<actual error>",
   "timestamp": "2026-10-01T12:00:00.000Z"
 }
 ```
 
-#### Example 2 — <Description>
+### Additional Request Examples
 
-**Status Code:** <HTTP status>
+<Actual examples or None.>
 
-```json
-{
-  "statusCode": 404,
-  "message": "<actual not-found error message>",
-  "timestamp": "2026-10-01T12:00:00.000Z"
-}
-```
+### Client Integration
 
-## Additional Examples
+- <Relevant integration information>
+- <Relevant integration information>
 
-### Example 1 — <Description>
+### Backend Behaviour
 
-```json
-{
-  "exampleField": "example value"
-}
-```
+1. <Actual step>
+2. <Actual step>
+3. <Actual step>
 
-### Example 2 — <Description>
+### Important Behaviour
 
-```json
-{
-  "exampleField": "example value"
-}
-```
+> <Only include when genuinely necessary.>
 
-## Client Note
-
-<Everything the client/frontend/mobile developer needs to know>
-
-## Logic
-
-<Actual backend implementation logic>
-
-<!-- Omit this entire optional block when there is no additional important information. -->
-
-## Important Information
-
-<Additional important information>
+---
 ````
 
-If a required section does not apply, **DO NOT REMOVE IT**. Write `None.` instead. The only exception is `## Important Information`, which must be omitted when there is nothing important to report.
+Rules:
+
+- `Important Behaviour` is optional.
+- `Path Parameters` is optional.
+- `Headers` is optional.
+- `Body Fields` can be omitted only when there is no body.
+- Every other major section shown above is required.
+- If a required section has no applicable content, write `None.`.
 
 ---
 
-# Module-Level Requirements
+# 21. Markdown and JSON Formatting Requirements
 
-At the beginning of every module document, include:
+All generated Markdown must render correctly in standard CommonMark/GitHub-flavoured Markdown viewers.
 
-```md
-# <Module Name>
+For every JSON request or response:
 
-## Overview
+- Use a fenced code block labelled `json`.
+- Include valid JSON only.
+- Use two-space indentation.
+- Put object properties on separate lines.
+- Put array items on appropriate separate lines.
+- Never output minified JSON.
+- Never include comments inside JSON.
+- Never use JavaScript syntax.
+- Never use trailing commas.
+- Never place prose inside the JSON fence.
 
-<What this module is responsible for>
-
-## Routes
-
-| Method | Route      | Description |
-| ------ | ---------- | ----------- |
-| POST   | api/v2/... | ...         |
-| GET    | api/v2/... | ...         |
-| PATCH  | api/v2/... | ...         |
-| DELETE | api/v2/... | ...         |
-```
-
-Then document **every route in that module** using the required route structure.
+When an example Markdown block contains a nested JSON fence, use four backticks for the outer `md` block and three backticks for the JSON block.
 
 ---
 
-# Accuracy Requirements
+# 22. Documentation Accuracy Requirements
 
-The documentation must be based on the actual implementation.
+**DO NOT SKIP ANY IMPLEMENTED ROUTE, FIELD, VALIDATION, RESPONSE, LOGIC, EXAMPLE, OR IMPORTANT CLIENT INFORMATION.**
 
-Before generating the documentation, inspect the relevant:
+Documentation must come from actual implementation.
 
-- Controllers
-- Routes
-- DTOs
-- Schemas/models
-- Services
-- Guards
-- Middleware
-- Pipes
-- Validators
-- Decorators
-- Enums
-- Authentication logic
-- Authorization logic
-- Database queries
-- External service integrations
-- Response serializers
-- Error handling
-- Related modules
+Do not document what the API *should* do.
 
-Trace each route from:
+Document what it **currently does**.
+
+If the implementation appears unusual or potentially incorrect, document the current behaviour rather than silently correcting it.
+
+For example:
+
+> The controller currently returns `201 Created` because it does not override the framework's default POST status.
+
+This is preferable to changing the documented result to `200 OK`.
+
+---
+
+# 23. Required Code Inspection
+
+Before documenting a module, inspect all relevant implementation layers.
+
+At minimum inspect, where applicable:
+
+- Controllers.
+- Route definitions.
+- DTOs.
+- Request schemas.
+- Response DTOs.
+- Database schemas/models.
+- Services.
+- Guards.
+- Middleware.
+- Pipes.
+- Interceptors.
+- Validators.
+- Decorators.
+- Enums.
+- Authentication logic.
+- Authorization logic.
+- Permission checks.
+- Role checks.
+- Database operations.
+- Repository methods.
+- Transactions.
+- External integrations.
+- Response serializers.
+- Exception filters.
+- File-storage services.
+- Queues/jobs.
+- Event emitters/listeners.
+- Related modules.
+
+Do not document a controller in isolation when behaviour depends on another layer.
+
+---
+
+# 24. Trace Every Endpoint
+
+For every route, trace:
 
 ```text
-Request
-  ↓
-Controller
-  ↓
-Guards / Middleware / Pipes
-  ↓
-Validation
-  ↓
+Incoming Request
+      ↓
+Controller / Route Handler
+      ↓
+Guards
+      ↓
+Middleware
+      ↓
+Pipes / DTO Validation
+      ↓
+Authorization / Permission Checks
+      ↓
 Service
-  ↓
-Database / External Service
-  ↓
-Response
+      ↓
+Repository / Database
+      ↓
+External Services / Side Effects
+      ↓
+Serializer / Interceptor
+      ↓
+Exception Filter
+      ↓
+Final HTTP Response
 ```
 
-Use this trace to document the actual implementation.
+Not every project uses every layer.
+
+Skip nonexistent layers rather than inventing them.
+
+Use this trace to determine:
+
+- Accepted inputs.
+- Transformations.
+- Authorization.
+- Business rules.
+- Database effects.
+- Side effects.
+- Errors.
+- Final response shape.
 
 ---
 
-# Do Not Make Assumptions
+# 25. Build an Internal Endpoint Inventory First
+
+Before writing a module document, internally create an endpoint inventory.
+
+For every discovered endpoint determine:
+
+- Module.
+- Controller.
+- HTTP method.
+- Full route.
+- Handler.
+- Authentication.
+- Roles.
+- Permissions.
+- Query parameters.
+- Path parameters.
+- Body DTO.
+- File inputs.
+- Success status.
+- Success return value.
+- Error branches.
+- Service calls.
+- Database calls.
+- Side effects.
+
+Compare the final documentation against this inventory.
+
+Do not expose this scratch inventory unless explicitly requested.
+
+Its purpose is to ensure no endpoint is omitted.
+
+---
+
+# 26. Do Not Make Assumptions
 
 Do not:
 
 - Invent routes.
-- Invent request fields.
-- Invent response fields.
-- Invent validation rules.
-- Invent status codes.
+- Invent fields.
+- Invent DTO properties.
+- Invent query parameters.
+- Invent enum values.
+- Invent responses.
+- Invent response envelopes.
+- Invent HTTP status codes.
+- Invent validations.
+- Invent roles.
 - Invent permissions.
-- Invent database behaviour.
-- Invent error responses.
+- Invent authentication requirements.
 - Invent business rules.
-- Assume a route behaves like another route.
-- Replace actual implementation details with generic explanations.
+- Invent database behaviour.
+- Invent external-service behaviour.
+- Invent notifications.
+- Invent errors.
+- Infer one endpoint's behaviour from another endpoint.
+- Use generic conventional REST behaviour when the code behaves differently.
 
-If the implementation does something unusual, document the unusual behaviour exactly.
+If implementation evidence is insufficient, explicitly state the limitation.
+
+Example:
+
+```md
+> The controller delegates this error to the payment provider. The exact provider error message is not statically defined in this codebase.
+```
+
+Do not replace uncertainty with invention.
 
 ---
 
-# Completeness Check
+# 27. Response Verification
 
-Before finishing each module, verify:
+Before finalizing an endpoint, verify the response against all relevant layers:
 
-- [ ] Every implemented route is documented.
-- [ ] Every route has a Title.
-- [ ] Every route has a Route.
-- [ ] Every route has an Authorization section immediately after Route.
-- [ ] Every Authorization section states the exact authorization method, all required roles, and all required permissions.
-- [ ] Every route has a Query section.
-- [ ] Every route has a Body section.
-- [ ] Every route has a Response section.
-- [ ] Every relevant response variant is documented.
-- [ ] Every relevant payload variant is documented.
-- [ ] Every route has a Client Note.
-- [ ] Every route has a Logic section.
-- [ ] Every route with additional important information has an Important Information section.
-- [ ] Routes with no additional important information omit that section instead of writing `None.`.
+- Controller return value.
+- Controller HTTP status.
+- Service result.
+- Serializer.
+- Global response interceptor.
+- Exception filter.
+
+For success responses verify:
+
+- Correct status code.
+- Correct global envelope.
+- Correct `data` shape.
+- Correct nested fields.
+- Correct nullability.
+- Correct arrays.
+- Correct message behaviour.
+
+For error responses verify:
+
+- Actual status code.
+- Actual message or message source.
+- Actual error envelope.
+- Whether validation errors use the same shape.
+- Whether external-provider errors are transformed.
+
+Do not document a response until this verification is complete.
+
+---
+
+# 28. JSON Validation
+
+Every generated fenced `json` block must be valid JSON.
+
+Before completing the documentation:
+
+- Parse every generated JSON example.
+- Fix malformed blocks.
+- Ensure braces match.
+- Ensure brackets match.
+- Ensure strings use double quotes.
+- Remove trailing commas.
+- Ensure nested objects are properly closed.
+- Ensure examples match the implementation.
+
+No documentation file should be considered complete while it contains invalid JSON.
+
+---
+
+# 29. Response Examples Must Be Complete
+
+For JSON success responses, never write:
+
+```json
+{}
+```
+
+Never write:
+
+```json
+{
+  "data": "..."
+}
+```
+
+Never write:
+
+```json
+{
+  "data": {}
+}
+```
+
+when the implementation returns a populated object.
+
+Never write:
+
+```text
+Returns the created user.
+```
+
+instead of the response body.
+
+Show a complete representative example.
+
+The only exceptions are:
+
+- `204 No Content`.
+- Redirects.
+- Streams.
+- Downloads.
+- Other genuinely non-JSON responses.
+
+Describe those behaviours explicitly.
+
+---
+
+# 30. Security-Sensitive Documentation
+
+Document relevant security behaviour without exposing secrets.
+
+Include actual client-visible behaviour such as:
+
+- Bearer token requirements.
+- Refresh-token handling.
+- OTP expiry.
+- Session revocation.
+- Role restrictions.
+- Permissions.
+- Rate limits.
+- Account-enumeration protections.
+- Token purpose validation.
+- File restrictions.
+- Tenant isolation.
+
+Never expose:
+
+- Secret keys.
+- Environment secret values.
+- Private signing keys.
+- Database credentials.
+- Provider credentials.
+
+Use placeholders where a secret value is naturally required:
+
+```text
+<access-token>
+<refresh-token>
+<google-client-secret>
+```
+
+---
+
+# 31. Writing Style
+
+Write like high-quality internal developer documentation.
+
+Use:
+
+- Direct language.
+- Short paragraphs.
+- Tables for structured facts.
+- Bullets for client guidance.
+- Numbered lists for backend execution flows.
+- Inline code formatting for fields, routes, enums, headers, methods, IDs, and technical values.
+
+Prefer:
+
+```md
+The client must send `Authorization: Bearer <access-token>`.
+```
+
+instead of:
+
+```md
+The frontend developer should make sure that whenever they want to use this endpoint, they include the access token in the authorization header.
+```
+
+Keep prose concise without removing technical details.
+
+---
+
+# 32. Avoid Visual Noise
+
+Do not make every sentence a heading.
+
+Do not use excessive levels such as:
+
+```text
+#####
+######
+```
+
+without need.
+
+The preferred hierarchy is:
+
+```text
+# Module
+## Endpoint
+### Major endpoint section
+#### Endpoint subsection
+```
+
+Avoid going deeper unless absolutely required.
+
+Do not use repeated labels such as:
+
+```text
+## Title
+## Route
+## Authorization
+## Query
+## Body
+```
+
+for every endpoint.
+
+The route's name itself is the endpoint heading.
+
+---
+
+# 33. Tables
+
+Keep tables readable.
+
+Use tables for:
+
+- Endpoint indexes.
+- Endpoint metadata.
+- Query parameters.
+- Path parameters.
+- Body fields.
+- File fields.
+- Response status summaries.
+
+Do not put large JSON objects inside tables.
+
+Do not create extremely wide tables when information is better placed in Notes.
+
+Use inline code formatting around:
+
+- Field names.
+- Enum values.
+- HTTP methods.
+- Routes.
+- IDs.
+- Statuses when appropriate.
+- Header names.
+
+---
+
+# 34. Client-Oriented Documentation
+
+The final documents must be useful to a client developer without reading backend code.
+
+For every endpoint, make it easy to answer:
+
+1. What URL do I call?
+2. Which HTTP method?
+3. Do I need authentication?
+4. Which roles/permissions are required?
+5. What query/path parameters exist?
+6. What do I send?
+7. Which fields are required?
+8. Which values are accepted?
+9. What do I receive?
+10. Which errors should I handle?
+11. What should the UI do after success?
+12. Are there special behaviours or side effects?
+
+If the generated endpoint documentation does not clearly answer these questions, improve it before finalizing.
+
+---
+
+# 35. Implementation-Oriented Documentation
+
+The same endpoint must also allow another backend developer to understand:
+
+1. Which guards execute?
+2. Which validations occur?
+3. Which service method is used?
+4. Which database operations occur?
+5. Which business rules are enforced?
+6. Which external services are called?
+7. Which notifications/events are triggered?
+8. Which errors can occur?
+9. Which response transformation occurs?
+10. Which unusual implementation details exist?
+
+Capture these under `Backend Behaviour` rather than mixing them into the client instructions.
+
+---
+
+# 36. Module Completeness Check
+
+Before finalizing each module, verify:
+
+- [ ] Every implemented route appears in the Endpoint Index.
+- [ ] Every indexed route has full documentation.
+- [ ] Endpoint numbering matches the index.
 - [ ] HTTP methods are correct.
-- [ ] API paths are correct.
+- [ ] Full API paths are correct.
+- [ ] Authentication is correct.
+- [ ] Roles are complete.
+- [ ] Permissions are complete.
 - [ ] Query parameters are complete.
-- [ ] Every route with query parameters uses the exact `Name | Is Optional | Default Value | Values` table format.
-- [ ] Every enum, role, status, or other restricted query parameter lists its actual allowed values in the `Values` column.
-- [ ] Request body examples match the actual validation rules.
-- [ ] Response examples match the actual implementation.
-- [ ] Every JSON success response has a complete, fenced, pretty-printed JSON example; no JSON response is described only in prose.
-- [ ] Every documented non-empty error response, including `404` where implemented, has a complete fenced JSON body; no error response is described only in prose.
-- [ ] Every response example has been parsed as JSON and verified against the controller, service, response interceptor, and exception filter.
-- [ ] No response example uses `{}`, `...`, a placeholder, or a partial `data` object in place of the actual returned body.
-- [ ] Status codes match the implementation.
-- [ ] Authentication requirements are documented.
-- [ ] Authorization/permission requirements are documented.
-- [ ] Important edge cases are documented.
-- [ ] No implementation details were invented.
+- [ ] Path parameters are complete.
+- [ ] Body fields are complete.
+- [ ] Optional/required states are correct.
+- [ ] Enum values are complete.
+- [ ] Validation rules are implementation-faithful.
+- [ ] File requirements are complete.
+- [ ] Success status codes are correct.
+- [ ] Success response examples are complete.
+- [ ] Error variants are complete.
+- [ ] Error JSON is complete.
+- [ ] Client Integration exists for every endpoint.
+- [ ] Backend Behaviour exists for every endpoint.
+- [ ] Important Behaviour appears only when needed.
+- [ ] Side effects are documented.
+- [ ] Security-sensitive behaviour is documented.
+- [ ] No route is invented.
+- [ ] No field is invented.
+- [ ] No response is invented.
+- [ ] No permission is invented.
+- [ ] No important implementation behaviour is omitted.
 
-**None of these steps should be skipped.**
+Do not mark the module complete until all applicable checks pass.
 
-The final output should be the complete `implementation-docs/` directory with one Markdown document per module.
+---
+
+# 37. Visual Quality Check
+
+Before finalizing every Markdown document, inspect the document as a reader would.
+
+Verify:
+
+- [ ] The module title is immediately understandable.
+- [ ] The Overview is concise.
+- [ ] The Endpoint Index makes navigation easy.
+- [ ] Endpoints are visually separated.
+- [ ] Each endpoint can be scanned quickly.
+- [ ] Request fields are presented in tables.
+- [ ] JSON blocks are easy to read.
+- [ ] Client instructions are separate from backend internals.
+- [ ] Long sections are broken into meaningful subsections.
+- [ ] There are no unnecessary duplicate explanations.
+- [ ] Heading hierarchy is consistent.
+- [ ] There are no giant unbroken paragraphs.
+- [ ] The document looks polished in GitHub Markdown preview.
+
+Accuracy takes priority over aesthetics, but poor readability must still be corrected.
+
+---
+
+# 38. Cross-Module Consistency Check
+
+After all modules are generated:
+
+Verify that the same concepts use the same terminology throughout.
+
+Examples:
+
+- Always use `Bearer <access-token>` if that is the project convention.
+- Do not alternate randomly between `Auth`, `Authentication`, and `Authorization`.
+- Use the same capitalization for roles.
+- Use the same API path formatting.
+- Use the same success/error response layout.
+- Use the same field-table structure.
+- Use the same Client Integration layout.
+- Use the same Backend Behaviour layout.
+
+Do not normalize actual implementation differences.
+
+Consistency applies to documentation presentation, not to changing backend behaviour.
+
+---
+
+# 39. Final Directory Verification
+
+Before finishing, compare the generated directory against the actual backend modules and controllers.
+
+The final output must contain:
+
+```text
+implementation-docs/
+├── README.md
+├── 1-<module>.md
+├── 2-<module>.md
+├── 3-<module>.md
+└── ...
+```
+
+Verify:
+
+- Every implemented module is represented.
+- Every implemented route is represented.
+- File numbering is continuous.
+- File names are descriptive.
+- README links match generated filenames.
+- Endpoint counts in README match module files.
+- Endpoint counts in module indexes match actual documented routes.
+
+---
+
+# 40. Final Requirement
+
+The final output is not complete merely because Markdown files were created.
+
+It is complete only when:
+
+1. Every implemented module has been inspected.
+2. Every route has been traced through the actual implementation.
+3. Every route has been documented.
+4. Every request shape has been verified.
+5. Every response shape has been verified.
+6. Every JSON example is valid.
+7. Every relevant authorization rule is documented.
+8. Every important error branch is documented.
+9. Every client-facing behaviour is documented.
+10. Every backend behaviour is implementation-faithful.
+11. The documentation is visually consistent and easy to scan.
+12. The completeness checklist passes.
+13. The visual-quality checklist passes.
+14. The cross-module consistency check passes.
+
+**Do not sacrifice implementation accuracy for prettier documentation.**
+
+**Do not sacrifice readability simply because the implementation is complex.**
+
+The final result should look and read like polished professional API documentation generated directly from the actual backend implementation.
