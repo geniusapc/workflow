@@ -536,6 +536,37 @@ items[].productId
 
 ---
 
+## 12A. Type-Dependent and Discriminated Bodies
+
+When a request body changes shape based on a discriminator such as `type`, `kind`, `mode`, `action`, `provider`, or `status`, document the full contract for **every supported value**. This also applies to DTOs that use conditional validation (for example, `ValidateIf`) or union/`oneOf` schemas.
+
+Do not document one representative payload and imply that the remaining variants are similar.
+
+For each discriminator, include:
+
+- The exact accepted value, taken from the implementation.
+- The fields required for that value.
+- The optional fields for that value.
+- Fields that are invalid, ignored, or not applicable for that value.
+- Nested fields, file fields, enum values, limits, and validation rules that change by type.
+- Whether the discriminator itself may be changed by an update endpoint.
+- Any type-specific response fields or behaviour.
+
+Add a matrix before the examples when there are two or more variants:
+
+```md
+| `type` value | Required fields | Optional fields | Not applicable / rejected | Notes |
+| --- | --- | --- | --- | --- |
+| `MEAL` | `type`, `meal` | `note` | `napTimes`, `attachments` | <actual behaviour> |
+| `PHOTO` | `type`, `attachments` | `description` | `meal`, `napTimes` | <actual behaviour> |
+```
+
+Then provide one complete, independently valid JSON request example for every supported value. The examples must be sufficient for a client to implement each variant without inspecting backend source code.
+
+If the API accepts multipart data for only some variants, document that distinction in both the matrix and the Files section. Do not infer type-specific rules from field names; verify them in the DTO, controller, service, and schema.
+
+---
+
 # 13. File Uploads
 
 For multipart/file routes, document files separately.
@@ -723,6 +754,8 @@ None.
 ```
 
 Add examples only when the implementation supports meaningfully different valid request patterns.
+
+For a type-dependent or discriminated request body, examples for every supported discriminator value are mandatory, even if the values seem similar. Place the complete per-type examples in the endpoint's request-body section or in this section, but never omit a supported variant.
 
 Examples include:
 
@@ -1528,6 +1561,10 @@ Before finalizing each module, verify:
 - [ ] Query parameters are complete.
 - [ ] Path parameters are complete.
 - [ ] Body fields are complete.
+- [ ] Every type-dependent/discriminated body lists all supported discriminator values.
+- [ ] Every type-dependent/discriminated body includes a required/optional/not-applicable field matrix.
+- [ ] Every supported discriminator value has a complete valid request example.
+- [ ] Type-specific files, validation, enums, response fields, and update rules are documented.
 - [ ] Optional/required states are correct.
 - [ ] Enum values are complete.
 - [ ] Validation rules are implementation-faithful.
